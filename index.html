@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+			// html stuff
+			var bodyElement = document.querySelector("body");
+
+			// Scene
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			// Renderer
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			// Test objects
+			const geometry = new THREE.BoxGeometry();
+			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			material = new THREE.MeshBasicMaterial( {color: 0xff0000 } );
+			var cube2 = new THREE.Mesh( geometry, material );
+			cube2.translateX(10);
+			scene.add( cube );
+			scene.add( cube2 );
+
+			// Constants
+			camera.position.z = 100;
+			var mouseDown = 0;
+
+			// vars
+			var oldX = 0;
+			var oldY = 0;
+
+			// Listeners
+			bodyElement.addEventListener("mousemove", getMouseDirection, false);
+			
+			// Set mouse flag to down
+			document.body.onmousedown = function() { 
+				++mouseDown;
+			}
+			// Set mouse flag to up
+			document.body.onmouseup = function() {
+				--mouseDown;
+			}
+
+			function getMouseDirection(e) {	
+				var prevX = oldX;
+				var prevY = oldY;
+				oldX = e.pageX;
+				oldY = e.pageY;
+
+				if (mouseDown == 1) {
+					camera.position.x -= (oldX - prevX);
+					camera.position.y += (oldY - prevY);
+				}
+			}
+
+			const animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+				
+
+				renderer.render( scene, camera );
+			};
+			animate();
+ 
+		</script>
+	</body>
+</html>
